@@ -11,10 +11,18 @@ class BarangController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $barang = Barang::all();
+        $query = Barang::query();
+
+        if ($request->has('search') && $request->search != '') {
+            $query->where('nama_barang', 'like', '%' . $request->search . '%')
+                ->orWhere('satuan', 'like', '%' . $request->search . '%');
+        }
+
+        $barang = $query->latest()->paginate(10)->withQueryString(); // bisa pagination sekalian
         return view('barang.index', compact('barang'));
+
     }
 
     /**
@@ -32,6 +40,7 @@ class BarangController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all()); // 👉 sementara buat ngecek data dari form
         $request->validate([
             'nama_barang' => 'required|string|max:100',
             'stok' => 'required|integer|min:0',
@@ -64,7 +73,10 @@ class BarangController extends Controller
      */
     public function edit(string $id)
     {
-        return view('barang.edit', compact('barang'));
+        $barang = Barang::findOrFail($id);
+        $kategori = Kategori::all();
+        return view('barang.edit', compact('barang', 'kategori'));
+
     }
 
     /**
@@ -74,12 +86,13 @@ class BarangController extends Controller
     {
         $request->validate([
             'nama_barang' => 'required|string|max:100',
-            'kategori' => 'required|string|max:50',
-            'satuan' => 'required|string|max:20',
             'stok' => 'required|integer|min:0',
-            'minimum_stok' => 'required|integer|min:0'
+            'kategori_id' => 'required|exists:kategoris,id',
+            'satuan' => 'required|string|max:20',
+            'minimum_stok' => 'required|integer|min:0',
         ]);
 
+        $barang = Barang::findOrFail($id);
         $barang->update($request->all());
 
         return redirect()->route('barang.index')->with('success', 'Barang berhasil diperbarui');
@@ -90,7 +103,9 @@ class BarangController extends Controller
      */
     public function destroy(string $id)
     {
-       $barang->delete();
-       return redirect()->route('barang.index')->with('success', 'Barang berhasil dihapus');
+        $barang = Barang::findOrFail($id);
+        $barang->delete();
+
+        return redirect()->route('barang.index')->with('success', 'Barang berhasil dihapus!');
     }
 }

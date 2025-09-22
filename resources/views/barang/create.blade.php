@@ -9,13 +9,13 @@
 
         <div class="mb-4">
             <label class="block mb-1">Nama Barang</label>
-            <input type="text" name="nama" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-blue-500" required>
+            <input type="text" name="nama_barang" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-blue-500" required>
         </div>
 
         <div class="mb-4">
             <label class="block mb-1">Kategori</label>
             <!-- <input type="text" name="kategori" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-blue-500" required> -->
-            <select name="kategori_id" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-blue-500" required>
+            <select name="kategori" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-blue-500" required>
                 <option value="">-- Pilih Kategori --</option>
                 @foreach($kategori as $k)
                     <option value="{{ $k->nama_kategori }}">{{ $k->nama_kategori }}</option>
@@ -29,13 +29,21 @@
         </div>
 
         <div class="mb-4">
-            <label class="block mb-1">Satuan</label>
-            <input type="text" name="satuan" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-blue-500" required>
+            <label for="satuan" class="block mb-2 text-sm font-medium">Satuan</label>
+            <select name="satuan" id="satuan"
+                class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-blue-500" required>
+                <option value="">-- Pilih Satuan --</option>
+                <option value="Pcs">Pcs</option>
+                <option value="Box">Box</option>
+                <option value="Pack">Pack</option>
+                <option value="Unit">Unit</option>
+                <option value="Lusin">Lusin</option>
+            </select>
         </div>
 
         <div class="mb-4">
             <label class="block mb-1">Minimum</label>
-            <input type="number" name="minimum" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-blue-500" required>
+            <input type="number" name="minimum_stok" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-blue-500" required>
         </div>
 
         <div class="flex justify-end space-x-2">
